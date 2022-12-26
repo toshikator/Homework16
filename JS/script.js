@@ -20,25 +20,20 @@ const database = [
 // First block
 function btn1() {
     console.log('List of married persons:');
-    database.filter((value)=>{
-        if (value.isMarried === true){
-            console.log(value);
-            return true;
-        }else return false;
-    });
+    printArrayToConsole( database.filter((value)=>{
+        return value.isMarried;
+    }));
 }
 //Second block
 function btn2() {
     console.log('database sorted by age:');
-    database.sort((value1, value2)=>{
+    printArrayToConsole( database.sort((value1, value2)=>{
         if (value1.age > value2.age){
             return 1;
         } else if (value1.age === value2.age){
             return 0;
         } else return -1;
-    }).forEach(value => {
-        console.log(value);
-    })
+    }));
 }
 //third block
 function btn3() {
@@ -70,24 +65,52 @@ function btn4() {
 const itemForRemove = document.getElementById('itemForRemove');
 
 function btn6() {
-    let elemForRemove = getNumberOfRange(itemForRemove.value);
-    database.splice(elemForRemove,1);
-    console.log('database after removing:');
-    database.forEach(value => {
-        console.log(value);
-    })
+    deleteElementFromArray(database,getNumber(itemForRemove));
+    // printArrayToConsole(database);
 }
 
-function getNumberOfRange(input) {
-    let i = false
-    while (!i) {
-        if (input === undefined || isNaN(+input) || input === '') {
-            alert("incorrect value");
-            itemForRemove.value = '';
-            return '';
-        } else {
-            i = true;
-            return Number(input);
-        }
+
+
+
+
+// functions block
+function deleteElementFromArray(array, numberOfElement) {
+    if (array.length<1) alert('array is empty');
+    else if (!isNumber(+numberOfElement)) alert('incorrect number of element to remove');
+    else {
+        array.splice(numberOfElement,1);
+    }
+}
+
+
+function getNumber(input) {
+    switch (typeof input) {
+        case "string": if (isNumber(+input)) return +input;
+        else alert('incorrect value of string');
+        break;
+        case "number": if (isNumber(input)) return input;
+        else alert('incorrect value of number');
+        break;
+        case "object": if (isNumber(input.value)) return input.value;
+        else alert('incorrect value of object');
+        break;
+        default: alert('incorrect input type');
+    }
+}
+
+
+function isNumber(value) {
+    return !(isNaN(value) || value === '' || value === undefined);
+}
+
+
+
+function printArrayToConsole(array) {
+    if (array === undefined || array.length < 1){
+        alert('wrong array for print');
+    } else {
+        array.forEach(value =>{
+            console.log(value);
+        });
     }
 }
