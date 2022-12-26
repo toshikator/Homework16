@@ -20,9 +20,7 @@ const database = [
 // First block
 function btn1() {
     console.log('List of married persons:');
-    printArrayToConsole( database.filter((value)=>{
-        return value.isMarried;
-    }));
+    printArrayToConsole( filterMarried(database, true));
 }
 //Second block
 function btn2() {
@@ -37,13 +35,9 @@ function btn2() {
 }
 //third block
 function btn3() {
-    const res = database.reduce((accumulator, value)=>{
-        accumulator.amountOfPerson++;
-        accumulator.summary_age += value.age;
-        return accumulator;
-    },{summary_age:0, amountOfPerson:0})
-    console.log('average Age: ',res.summary_age/res.amountOfPerson);
+    printAverageAge(database);
 }
+
 //fourth block
 function btn4() {
     console.log('country statistics:')
@@ -55,8 +49,6 @@ function btn4() {
         }
         return acc;
     },{})));
-    //console.log( Object.values(res));
-    // Object.valueOf(res);
     Object.entries(res).forEach(value => {
         console.log(value[0],'->', value[1]);
     })
@@ -69,9 +61,30 @@ function btn6() {
     // printArrayToConsole(database);
 }
 
+// fifth block
+// Print married person sorted ASC by name, not married DESC by age and average age of married person
+function btn5() {
 
-
-
+    console.log('married person sorted ASC by name:');
+    printArrayToConsole(
+        filterMarried(database,true).sort((value1, value2)=>{
+            // console.log('name 1 ',value1[name],'name 2 ',value2[name]);
+            if (value1["name"]>value2["name"]) return 1;
+            else if(value1["name"]<value2["name"]) return -1;
+            else return 0;
+        })
+    );
+    console.log('unmarried person sorted DESC by age:');
+    const tempArr =filterMarried(database,false).sort((value1, value2)=>{
+        // console.log('name 1 ',value1[name],'name 2 ',value2[name]);
+        if (value1["age"]>value2["age"]) return -1;
+        else if(value1["age"]<value2["age"]) return 1;
+        else return 0;
+    })
+    printArrayToConsole(tempArr);
+    console.log(`only for married person:`);
+    printAverageAge(tempArr);
+}
 
 // functions block
 function deleteElementFromArray(array, numberOfElement) {
@@ -113,4 +126,26 @@ function printArrayToConsole(array) {
             console.log(value);
         });
     }
+}
+
+function filterMarried(array,isMarried) {
+    if (isMarried) {
+        return array.filter((value) => {
+            return value.isMarried;
+        });
+    } else {
+        return array.filter((value) => {
+            return !value.isMarried;
+        });
+    }
+}
+
+
+function printAverageAge(array) {
+    const res = array.reduce((accumulator, value)=>{
+        accumulator.amountOfPerson++;
+        accumulator.summary_age += value.age;
+        return accumulator;
+    },{summary_age:0, amountOfPerson:0})
+    console.log('average Age: ',res.summary_age/res.amountOfPerson);
 }
